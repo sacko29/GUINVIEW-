@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Zone - Connexion Internet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-wifi"></i>
+            <h1>Wi-Fi Zone</h1>
+        </div>
+        <p>Connexion internet haute vitesse - Paiement en espèces</p>
+    </header>
+
+    <!-- Offres -->
+    <main>
+        <section class="offres">
+            <h2><i class="fas fa-tags"></i> Choisissez votre forfait</h2>
+            
+            <div class="carte-offre">
+                <div class="icone"><i class="fas fa-clock"></i></div>
+                <h3>24 Heures</h3>
+                <p class="prix">500 FCFA</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Accès 24h non-stop</li>
+                    <li><i class="fas fa-check"></i> Haute vitesse</li>
+                    <li><i class="fas fa-check"></i> Support technique</li>
+                    <li><i class="fas fa-check"></i> Code immédiat</li>
+                </ul>
+                <div class="stock-info">
+                    <i class="fas fa-box"></i> Codes disponibles : <span id="stock-24h">0</span>
+                </div>
+                <button class="btn-info">
+                    <i class="fas fa-store"></i> Acheter au comptoir
+                </button>
+            </div>
+
+            <div class="carte-offre populaire">
+                <div class="badge">Populaire</div>
+                <div class="icone"><i class="fas fa-calendar-week"></i></div>
+                <h3>1 Semaine</h3>
+                <p class="prix">2 000 FCFA</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> 7 jours complets</li>
+                    <li><i class="fas fa-check"></i> Illimité</li>
+                    <li><i class="fas fa-check"></i> Support prioritaire</li>
+                    <li><i class="fas fa-check"></i> Code instantané</li>
+                </ul>
+                <div class="stock-info">
+                    <i class="fas fa-box"></i> Codes disponibles : <span id="stock-1semaine">0</span>
+                </div>
+                <button class="btn-info">
+                    <i class="fas fa-store"></i> Acheter au comptoir
+                </button>
+            </div>
+
+            <div class="carte-offre">
+                <div class="icone"><i class="fas fa-calendar-alt"></i></div>
+                <h3>1 Mois</h3>
+                <p class="prix">5 000 FCFA</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> 30 jours d'accès</li>
+                    <li><i class="fas fa-check"></i> Meilleur rapport qualité/prix</li>
+                    <li><i class="fas fa-check"></i> Support 24h/24</li>
+                    <li><i class="fas fa-check"></i> Activation immédiate</li>
+                </ul>
+                <div class="stock-info">
+                    <i class="fas fa-box"></i> Codes disponibles : <span id="stock-1mois">0</span>
+                </div>
+                <button class="btn-info">
+                    <i class="fas fa-store"></i> Acheter au comptoir
+                </button>
+            </div>
+        </section>
+
+        <!-- Étapes SIMPLIFIÉES -->
+        <section class="etapes">
+            <h2><i class="fas fa-list-ol"></i> Comment acheter ?</h2>
+            <div class="etapes-container">
+                <div class="etape">
+                    <div class="numero">1</div>
+                    <i class="fas fa-store"></i>
+                    <h3>Viens au comptoir</h3>
+                    <p>Présente-toi à notre point de vente</p>
+                </div>
+                <div class="etape">
+                    <div class="numero">2</div>
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Paie en espèces</h3>
+                    <p>Donne l'argent au vendeur</p>
+                </div>
+                <div class="etape">
+                    <div class="numero">3</div>
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>Reçois ton ticket</h3>
+                    <p>Code Wi-Fi imprimé sur ticket</p>
+                </div>
+                <div class="etape">
+                    <div class="numero">4</div>
+                    <i class="fas fa-wifi"></i>
+                    <h3>Connecte-toi</h3>
+                    <p>Utilise le code sur le réseau Wi-Fi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructions connexion -->
+        <section class="instructions-connexion">
+            <h2><i class="fas fa-wifi"></i> Comment se connecter ?</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">1</div>
+                    <p>Connecte-toi au réseau Wi-Fi <strong>"Wi-Fi Zone"</strong></p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <p>La page de connexion s'ouvre automatiquement</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <p>Entre ton <strong>nom d'utilisateur</strong> et <strong>mot de passe</strong> (même code)</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">4</div>
+                    <p>Clique sur <strong>Connect</strong> et profite d'internet !</p>
+                </div>
+            </div>
+            <div class="exemple-connexion">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iMTUwIiB5PSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMzMzIj5NaWtyb1RpayBXaS1GaTwvdGV4dD48cmVjdCB4PSI1MCIgeT0iNzAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzAiIHJ4PSI1IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNjY2MiLz48dGV4dCB4PSI2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY2NiI+VXNlcm5hbWU8L3RleHQ+PHJlY3QgeD0iNTAiIHk9IjExMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzMCIgcng9IjUiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2NjYyIvPjx0ZXh0IHg9IjYwIiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY2NiI+UGFzc3dvcmQ8L3RleHQ+PHJlY3QgeD0iMTAwIiB5PSIxNjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMzAiIHJ4PSIxNSIgZmlsbD0iIzAwN2FmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNmZmYiPkNvbm5lY3Q8L3RleHQ+PC9zdmc+" 
+                     alt="Exemple page connexion MikroTik" class="exemple-img">
+                <p class="legende">Exemple de page de connexion</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="contact">
+            <h3><i class="fas fa-store"></i> Point de vente</h3>
+            <p><i class="fas fa-map-marker-alt"></i> <strong>Adresse :</strong> [Ton adresse ici]</p>
+            <p><i class="fas fa-clock"></i> <strong>Horaires :</strong> 8h - 22h (7j/7)</p>
+            <p><i class="fas fa-phone"></i> <strong>Téléphone :</strong> +225 XX XX XX XX</p>
+        </div>
+        
+        <div class="admin-link">
+            <a href="admin.html" class="btn-admin">
+                <i class="fas fa-user-cog"></i> Espace Vendeur
+            </a>
+            <p class="note-admin">(Accès réservé au personnel)</p>
+        </div>
+        
+        <div class="mode-paiement">
+            <p><i class="fas fa-money-bill-wave"></i> <strong>Paiement accepté :</strong> Espèces uniquement</p>
+        </div>
+        
+        <p class="copyright">© 2024 Wi-Fi Zone. Service de connexion internet.</p>
+    </footer>
+
+    <script>
+        // Met à jour les stocks depuis les codes disponibles
+        function mettreAJourStocks() {
+            const codes = JSON.parse(localStorage.getItem('codes_disponibles') || '[]');
+            
+            // Compte les codes par forfait
+            const stock24h = codes.filter(c => c.forfait === '24h' && !c.utilise).length;
+            const stock1semaine = codes.filter(c => c.forfait === '1semaine' && !c.utilise).length;
+            const stock1mois = codes.filter(c => c.forfait === '1mois' && !c.utilise).length;
+            
+            // Affiche les stocks
+            document.getElementById('stock-24h').textContent = stock24h;
+            document.getElementById('stock-1semaine').textContent = stock1semaine;
+            document.getElementById('stock-1mois').textContent = stock1mois;
+            
+            // Change la couleur si stock faible
+            if(stock24h < 5) document.getElementById('stock-24h').style.color = '#ff6b6b';
+            if(stock1semaine < 5) document.getElementById('stock-1semaine').style.color = '#ff6b6b';
+            if(stock1mois < 5) document.getElementById('stock-1mois').style.color = '#ff6b6b';
+        }
+        
+        // Au chargement
+        document.addEventListener('DOMContentLoaded', mettreAJourStocks);
+    </script>
+</body>
+  </html>
