@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Vendeur - Wi-Fi Zone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-page">
+    <header>
+        <a href="index.html" class="btn-retour">
+            <i class="fas fa-home"></i> Retour au site
+        </a>
+        <h1><i class="fas fa-user-cog"></i> Espace Vendeur</h1>
+        <p class="subtitle">Gestion des codes Wi-Fi - Vente en espèces</p>
+    </header>
+
+    <main class="admin-container">
+        <!-- Section 1 : Vue d'ensemble -->
+        <section class="admin-section overview">
+            <h2><i class="fas fa-tachometer-alt"></i> Tableau de bord</h2>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Recettes aujourd'hui</h3>
+                    <p class="stat-value" id="recettes-jour">0 FCFA</p>
+                    <p class="stat-detail" id="ventes-jour">0 ventes</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card stock">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3>Stock total</h3>
+                    <p class="stat-value" id="stock-total">0 codes</p>
+                    <p class="stat-detail">
+                        <span class="stock-24h">24h: 0</span> | 
+                        <span class="stock-1s">1s: 0</span> | 
+                        <span class="stock-1m">1m: 0</span>
+                    </p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card vendus">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <h3>Codes vendus</h3>
+                    <p class="stat-value" id="codes-vendus">0</p>
+                    <p class="stat-detail">Aujourd'hui</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card revenus">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Revenus totaux</h3>
+                    <p class="stat-value" id="revenus-totaux">0 FCFA</p>
+                    <p class="stat-detail">Depuis le début</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 : Vente rapide -->
+        <section class="admin-section vente-rapide">
+            <h2><i class="fas fa-cash-register"></i> Vente rapide</h2>
+            <p class="description">Le client paie en espèces, donne-lui un code immédiatement</p>
+            
+            <div class="vente-form">
+                <div class="form-group">
+                    <label for="forfait-vente"><i class="fas fa-wifi"></i> Forfait à vendre :</label>
+                    <select id="forfait-vente" onchange="changerForfaitVente()">
+                        <option value="24h">24 Heures (500 FCFA)</option>
+                        <option value="1semaine">1 Semaine (2000 FCFA)</option>
+                        <option value="1mois">1 Mois (5000 FCFA)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="montant-percu"><i class="fas fa-money-bill"></i> Montant perçu :</label>
+                    <input type="number" id="montant-percu" placeholder="Ex: 2000" oninput="calculerMonnaie()">
+                </div>
+                
+                <div class="montant-info">
+                    <p>Prix du forfait : <strong id="prix-forfait">500</strong> FCFA</p>
+                    <p>Monnaie à rendre : <strong id="monnaie-a-rendre">0</strong> FCFA</p>
+                    <p id="message-monnaie" class="message"></p>
+                </div>
+                
+                <div class="codes-disponibles">
+                    <h4><i class="fas fa-key"></i> Codes disponibles :</h4>
+                    <div class="codes-liste" id="codes-disponibles-vente">
+                        <!-- Les codes apparaîtront ici -->
+                    </div>
+                </div>
+                
+                <div class="vente-actions">
+                    <button onclick="vendreCode()" class="btn-vendre">
+                        <i class="fas fa-check-circle"></i> Valider la vente
+                    </button>
+                    <button onclick="annulerVente()" class="btn-annuler">
+                        <i class="fas fa-times-circle"></i> Annuler
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ticket-impression" id="ticket-impression">
+                <!-- Ticket à imprimer/copier -->
+            </div>
+        </section>
+
+        <!-- Section 3 : Gestion des stocks -->
+        <section class="admin-section gestion-stock">
+            <h2><i class="fas fa-boxes"></i> Gestion des stocks</h2>
+            
+            <div class="stock-actions">
+                <div class="form-group-inline">
+                    <label for="forfait-generer"><i class="fas fa-plus-circle"></i> Générer des codes :</label>
+                    <select id="forfait-generer">
+                        <option value="24h">24 Heures</option>
+                        <option value="1semaine">1 Semaine</option>
+                        <option value="1mois">1 Mois</option>
+                    </select>
+                    <input type="number" id="quantite-generer" value="10" min="1" max="100">
+                    <button onclick="genererCodesStock()" class="btn-generer">
+                        <i class="fas fa-magic"></i> Générer
+                    </button>
+                </div>
+                
+                <button onclick="importerCodes()" class="btn-importer">
+                    <i class="fas fa-file-import"></i> Importer des codes
+                </button>
+            </div>
+            
+            <div class="stock-details">
+                <div class="stock-categorie">
+                    <h4>24 Heures</h4>
+                    <p class="stock-count" id="stock-detail-24h">0 codes disponibles</p>
+                    <div class="stock-codes" id="stock-codes-24h">
+                        <!-- Codes 24h -->
+                    </div>
+                </div>
+                
+                <div class="stock-categorie">
+                    <h4>1 Semaine</h4>
+                    <p class="stock-count" id="stock-detail-1semaine">0 codes disponibles</p>
+                    <div class="stock-codes" id="stock-codes-1semaine">
+                        <!-- Codes 1 semaine -->
+                    </div>
+                </div>
+                
+                <div class="stock-categorie">
+                    <h4>1 Mois</h4>
+                    <p class="stock-count" id="stock-detail-1mois">0 codes disponibles</p>
+                    <div class="stock-codes" id="stock-codes-1mois">
+                        <!-- Codes 1 mois -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 : Historique des ventes -->
+        <section class="admin-section historique">
+            <h2><i class="fas fa-history"></i> Historique des ventes</h2>
+            
+            <div class="filtres">
+                <button onclick="filtrerVentes('aujourdhui')" class="btn-filtre active">Aujourd'hui</button>
+                <button onclick="filtrerVentes('semaine')" class="btn-filtre">Cette semaine</button>
+                <button onclick="filtrerVentes('mois')" class="btn-filtre">Ce mois</button>
+                <button onclick="filtrerVentes('tous')" class="btn-filtre">Toutes</button>
+            </div>
+            
+            <div class="table-container">
+                <table class="table-ventes">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Code</th>
+                            <th>Forfait</th>
+                            <th>Prix</th>
+                            <th>Monnaie rendue</th>
+                            <th>Heure</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableau-ventes">
+                        <!-- Les ventes apparaîtront ici -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="total-section">
+                <p>Total des ventes affichées : <strong id="total-ventes">0 FCFA</strong></p>
+                <div class="export-actions">
+                    <button onclick="exporterVentes()" class="btn-export">
+                        <i class="fas fa-file-excel"></i> Exporter en Excel
+                    </button>
+                    <button onclick="imprimerRapport()" class="btn-imprimer">
+                        <i class="fas fa-print"></i> Imprimer le rapport
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5 : Configuration -->
+        <section class="admin-section configuration">
+            <h2><i class="fas fa-cog"></i> Configuration</h2>
+            
+            <div class="config-grid">
+                <div class="config-item">
+                    <h4><i class="fas fa-money-bill"></i> Prix des forfaits</h4>
+                    <div class="form-group">
+                        <label>24 Heures :</label>
+                        <input type="number" id="prix-24h" value="500" min="100">
+                        <span>FCFA</span>
+                    </div>
+                    <div class="form-group">
+                        <label>1 Semaine :</label>
+                        <input type="number" id="prix-1semaine" value="2000" min="500">
+                        <span>FCFA</span>
+                    </div>
+                    <div class="form-group">
+                        <label>1 Mois :</label>
+                        <input type="number" id="prix-1mois" value="5000" min="1000">
+                        <span>FCFA</span>
+                    </div>
+                </div>
+                
+                <div class="config-item">
+                    <h4><i class="fas fa-receipt"></i> Format du ticket</h4>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="inclure-nom" checked> Nom du point de vente</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="inclure-date" checked> Date et heure</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="inclure-instructions" checked> Instructions connexion</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="inclure-support" checked> Support client</label>
+                    </div>
+                </div>
+                
+                <div class="config-item">
+                    <h4><i class="fas fa-database"></i> Sauvegarde</h4>
+                    <p>Dernière sauvegarde : <span id="derniere-sauvegarde">Jamais</span></p>
+                    <button onclick="sauvegarderDonnees()" class="btn-sauvegarder">
+                        <i class="fas fa-save"></i> Sauvegarder maintenant
+                    </button>
+                    <button onclick="restaurerDonnees()" class="btn-restaurer">
+                        <i class="fas fa-undo"></i> Restaurer
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="admin-footer">
+        <div class="session-info">
+            <p><i class="fas fa-user"></i> Connecté : <strong>Vendeur</strong></p>
+            <p><i class="fas fa-clock"></i> Heure : <span id="heure-actuelle">--:--</span></p>
+        </div>
+        
+        <div class="actions-footer">
+            <button onclick="rafraichirPage()" class="btn-rafraichir">
+                <i class="fas fa-sync-alt"></i> Rafraîchir
+            </button>
+            <button onclick="viderCache()" class="btn-vider">
+                <i class="fas fa-trash"></i> Vider le cache
+            </button>
+            <button onclick="deconnexion()" class="btn-deconnexion">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        // ========== VARIABLES GLOBALES ==========
+        let codesDisponibles = JSON.parse(localStorage.getItem('codes_disponibles') || '[]');
+        let codesVendus = JSON.parse(localStorage.getItem('codes_vendus') || '[]');
+        let parametres = JSON.parse(localStorage.getItem('parametres') || '{}');
+        
+        // Paramètres par défaut
+        if(!parametres.prix) {
+            parametres = {
+                prix: { '24h': 500, '1semaine': 2000, '1mois': 5000 },
+                ticket: { nom: true, date: true, instructions: true, support: true },
+                derniereSauvegarde: null
+            };
+            localStorage.setItem('parametres', JSON.stringify(parametres));
+        }
+        
+        // ========== FONCTIONS UTILITAIRES ==========
+        function mettreAJourStocks() {
+            const stock24h = codesDisponibles.filter(c => c.forfait === '24h' && !c.utilise).length;
+            const stock1s = codesDisponibles.filter(c => c.forfait === '1semaine' && !c.utilise).length;
+            const stock1m = codesDisponibles.filter(c => c.forfait === '1mois' && !c.utilise).length;
+            
+            // Met à jour les indicateurs
+            document.getElementById('stock-total').textContent = codesDisponibles.filter(c => !c.utilise).length + ' codes';
+            document.querySelector('.stock-24h').textContent = '24h: ' + stock24h;
+            document.querySelector('.stock-1s').textContent = '1s: ' + stock1s;
+            document.querySelector('.stock-1m').textContent = '1m: ' + stock1m;
+            
+            // Pages détaillées
+            document.getElementById('stock-detail-24h').textContent = stock24h + ' codes disponibles';
+            document.getElementById('stock-detail-1semaine').textContent = stock1s + ' codes disponibles';
+            document.getElementById('stock-detail-1mois').textContent = stock1m + ' codes disponibles';
+            
+            return { stock24h, stock1s, stock1m };
+        }
+        
+        function calculerRevenus() {
+            const aujourdhui = new Date().toDateString();
+            let recettesJour = 0;
+            let ventesJour = 0;
+            let revenusTotaux = 0;
+            
+            codesVendus.forEach(vente => {
+                const prix = parametres.prix[vente.forfait] || 0;
+                revenusTotaux += prix;
+                
+                if(new Date(vente.dateVente).toDateString() === aujourdhui) {
+                    recettesJour += prix;
+                    ventesJour++;
+                }
+            });
+            
+            document.getElementById('recettes-jour').textContent = recettesJour + ' FCFA';
+            document.getElementById('ventes-jour').textContent = ventesJour + ' ventes';
+            document.getElementById('codes-vendus').textContent = codesVendus.length;
+            document.getElementById('revenus-totaux').textContent = revenusTotaux + ' FCFA';
+            
+            return { recettesJour, ventesJour, revenusTotaux };
+        }
+        
+        // ========== VENTE RAPIDE ==========
+        let codeSelectionne = null;
+        
+        function changerForfaitVente() {
+            const forfait = document.getElementById('forfait-vente').value;
+            const prix = parametres.prix[forfait];
+            document.getElementById('prix-forfait').textContent = prix;
+            
+            // Affiche les codes disponibles pour ce forfait
+            afficherCodesPourVente(forfait);
+            
+            // Réinitialise le montant perçu
+            document.getElementById('montant-percu').value = '';
+            document.getElementById('monnaie-a-rendre').textContent = '0';
+            document.getElementById('message-monnaie').textContent = '';
+            
+            // Réinitialise la sélection
+            codeSelectionne = null;
+        }
+        
+        function afficherCodesPourVente(forfait) {
+            const codes = codesDisponibles.filter(c => 
+                c.forfait === forfait && !c.utilise
+            ).slice(0, 10); // Affiche maximum 10 codes
+            
+            let html = '';
+            
+            if(codes.length === 0) {
+                html = '<p class="aucun-code">Aucun code disponible. Génère d\'abord des codes.</p>';
+            } else {
+                codes.forEach(code => {
+                    html += `
+                        <div class="code-item-vente ${code.selectionne ? 'selected' : ''}" 
+                             onclick="selectionnerCode('${code.code}')">
+                            <span class="code-text">${code.code}</span>
+                            <span class="code-status">Disponible</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('codes-disponibles-vente').innerHTML = html;
+        }
+        
+        function selectionnerCode(code) {
+            // Désélectionne tous les codes
+            document.querySelectorAll('.code-item-vente').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Sélectionne le code cliqué
+            const item = Array.from(document.querySelectorAll('.code-item-vente'))
+                .find(item => item.querySelector('.code-text').textContent === code);
+            
+            if(item) {
+                item.classList.add('selected');
+                codeSelectionne = code;
+            }
+        }
+        
+        function calculerMonnaie() {
+            const montantPercu = parseFloat(document.getElementById('montant-percu').value) || 0;
+            const forfait = document.getElementById('forfait-vente').value;
+            const prix = parametres.prix[forfait];
+            const monnaie = montantPercu - prix;
+            
+            document.getElementById('monnaie-a-rendre').textContent = monnaie;
+            
+            const messageElement = document.getElementById('message-monnaie');
+            if(montantPercu < prix) {
+                messageElement.textContent = 'Montant insuffisant !';
+                messageElement.style.color = '#ff6b6b';
+            } else if(montantPercu === prix) {
+                messageElement.textContent = 'Montant exact';
+                messageElement.style.color = '#4CAF50';
+            } else {
+                messageElement.textContent = `Rendre ${monnaie} FCFA`;
+                messageElement.style.color = '#2196F3';
+            }
+        }
+        
+        function vendreCode() {
+            if(!codeSelectionne) {
+                alert('Sélectionne d\'abord un code à vendre !');
+                return;
+            }
+            
+            const forfait = document.getElementById('forfait-vente').value;
+            const montantPercu = parseFloat(document.getElementById('montant-percu').value) || 0;
+            const prix = parametres.prix[forfait];
+            
+            if(montantPercu < prix) {
+                alert(`Montant insuffisant ! Il manque ${prix - montantPercu} FCFA.`);
+                return;
+            }
+            
+            if(!confirm(`Vendre le code ${codeSelectionne} pour ${prix} FCFA ?`)) {
+                return;
+            }
+            
+            // Trouve le code dans les disponibles
+            const codeIndex = codesDisponibles.findIndex(c => c.code === codeSelectionne);
+            if(codeIndex === -1) {
+                alert('Code non trouvé !');
+                return;
+            }
+            
+            const code = codesDisponibles[codeIndex];
+            
+            // Crée l'objet vente
+            const vente = {
+                code: code.code,
+                forfait: code.forfait,
+                prix: prix,
+                montantPercu: montantPercu,
+                monnaieRendue: montantPercu - prix,
+                dateVente: new Date().toISOString(),
+                heure: new Date().toLocaleTimeString(),
+                vendeur: 'Vendeur 1'
+            };
+            
+            // Met à jour le code
+            code.utilise = true;
+            code.dateUtilisation = new Date().toISOString();
+            code.utilisePar = 'Vente en espèces';
+            
+            // Ajoute à la liste des ventes
+            codesVendus.push(vente);
+            
+            // Met à jour le stockage
+            codesDisponibles.splice(codeIndex, 1);
+            localStorage.setItem('codes_disponibles', JSON.stringify(codesDisponibles));
+            localStorage.setItem('codes_vendus', JSON.stringify(codesVendus));
+            
+            // Génère le ticket
+            genererTicket(vente, code);
+            
+            // Met à jour l'affichage
+            mettreAJourStocks();
+            calculerRevenus();
+            afficherHistoriqueVentes('aujourdhui');
+            
+            alert('Vente enregistrée avec succès !');
+            
+            // Réinitialise le formulaire
+            document.getElementById('montant-percu').value = '';
+            codeSelectionne = null;
+            changerForfaitVente();
+        }
+        
+        function genererTicket(vente, code) {
+            const date = new Date(vente.dateVente);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateFormatee = date.toLocaleDateString('fr-FR', options);
+            const heureFormatee = date.toLocaleTimeString('fr-FR');
+            
+            let ticketHTML = `
+                <div class="ticket">
+                    <div class="ticket-header">
+                        <h3><i class="fas fa-wifi"></i> Wi-Fi Zone</h3>
+                        <p>Ticket de vente</p>
+                    </div>
+                    
+                    <div class="ticket-body">
+                        <div class="ticket-info">
+                            <p><strong>Code Wi-Fi :</strong> ${vente.code}</p>
+                            <p><strong>Forfait :</strong> ${vente.forfait === '24h' ? '24 Heures' : 
+                                                          vente.forfait === '1semaine' ? '1 Semaine' : '1 Mois'}</p>
+                            <p><strong>Validité :</strong> ${code.duree}</p>
+                            <p><strong>Prix :</strong> ${vente.prix} FCFA</p>
+                            <p><strong>Montant reçu :</strong> ${vente.montantPercu} FCFA</p>
+                            <p><strong>Monnaie rendue :</strong> ${vente.monnaieRendue} FCFA</p>
+                        </div>
+                        
+                        <div class="ticket-date">
+                            <p>Date : ${dateFormatee}</p>
+                            <p>Heure : ${heureFormatee}</p>
+                        </div>
+                        
+                        <div class="ticket-instructions">
+                            <h4>Instructions de connexion :</h4>
+                            <ol>
+                                <li>Connectez-vous au réseau "Wi-Fi Zone"</li>
+                                <li>Ouvrez votre navigateur</li>
+                                <li>Entrez ce code comme nom d'utilisateur ET mot de passe</li>
+                                <li>Cliquez sur "Connect"</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="ticket-support">
+                            <p><i class="fas fa-headset"></i> Support : +225 XX XX XX XX</p>
+                            <p><i class="fas fa-clock"></i> Horaires : 8h - 22h</p>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-footer">
+                        <p>Merci pour votre achat !</p>
+                        <p>Conservez ce ticket comme preuve d'achat</p>
+                    </div>
+                </div>
+                
+                <div class="ticket-actions">
+                    <button onclick="imprimerTicket()" class="btn-imprimer-ticket">
+                        <i class="fas fa-print"></i> Imprimer le ticket
+                    </button>
+                    <button onclick="copierTicket()" class="btn-copier-ticket">
+                        <i class="fas fa-copy"></i> Copier le code
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('ticket-impression').innerHTML = ticketHTML;
+        }
+        
+        function imprimerTicket() {
+            const printContent = document.querySelector('.ticket').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            
+            // Restaure les écouteurs d'événements
+            location.reload();
+        }
+        
+        function copierTicket() {
+            const code = codeSelectionne;
+            if(code) {
+                navigator.clipboard.writeText(code)
+                    .then(() => alert(`Code copié : ${code}`))
+                    .catch(err => console.error('Erreur de copie :', err));
+            }
+        }
+        
+        // ========== GESTION DES STOCKS ==========
+        function genererCodesStock() {
+            const forfait = document.getElementById('forfait-generer').value;
+            const quantite = parseInt(document.getElementById('quantite-generer').value);
+            
+            let prefixe = '';
+            let duree = '';
+            
+            switch(forfait) {
+                case '24h':
+                    prefixe = 'WIFI24';
+                    duree = '24h';
+                    break;
+                case '1semaine':
+                    prefixe = 'WIFI1S';
+                    duree = '7 jours';
+                    break;
+                case '1mois':
+                    prefixe = 'WIFI1M';
+                    duree = '30 jours';
+                    break;
+            }
+            
+            let nouveauxCodes = [];
+            
+            for(let i = 0; i < quantite; i++) {
+                const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+                const code = `${prefixe}-${randomPart}`;
+                
+                const codeObj = {
+                    code: code,
+                    forfait: forfait,
+                    duree: duree,
+                    dateCreation: new Date().toLocaleString(),
+                    utilise: false,
+                    utilisePar: null,
+                    dateUtilisation: null
+                };
+                
+                nouveauxCodes.push(codeObj);
+            }
+            
+            // Ajoute aux codes disponibles
+            codesDisponibles = codesDisponibles.concat(nouveauxCodes);
+            localStorage.setItem('codes_disponibles', JSON.stringify(codesDisponibles));
+            
+            // Affiche les nouveaux codes
+            afficherCodesStock();
+            mettreAJourStocks();
+            
+            alert(`${quantite} codes ${duree} générés avec succès !`);
+        }
+        
+        function afficherCodesStock() {
+            ['24h', '1semaine', '1mois'].forEach(forfait => {
+                const codes = codesDisponibles.filter(c => 
+                    c.forfait === forfait && !c.utilise
+                ).slice(0, 20); // Affiche max 20 codes par forfait
+                
+                let html = '';
+                codes.forEach(code => {
+                    html += `<div class="code-item-stock">${code.code}</div>`;
+                });
+                
+                document.getElementById(`stock-codes-${forfait}`).innerHTML = html;
+            });
+        }
+        
+        // ========== HISTORIQUE DES VENTES ==========
+        function afficherHistoriqueVentes(periode) {
+            let ventesFiltrees = [...codesVendus];
+            
+            const maintenant = new Date();
+            const aujourdhui = maintenant.toDateString();
+            
+            if(periode === 'aujourdhui') {
+                ventesFiltrees = ventesFiltrees.filter(v => 
+                    new Date(v.dateVente).toDateString() === aujourdhui
+                );
+            } else if(periode === 'semaine') {
+                const ilYa7Jours = new Date(maintenant.setDate(maintenant.getDate() - 7));
+                ventesFiltrees = ventesFiltrees.filter(v => 
+                    new Date(v.dateVente) >= ilYa7Jours
+                );
+            } else if(periode === 'mois') {
+                const ilYa30Jours = new Date(maintenant.setDate(maintenant.getDate() - 30));
+                ventesFiltrees = ventesFiltrees.filter(v => 
+                    new Date(v.dateVente) >= ilYa30Jours
+                );
+            }
+            // 'tous' : pas de filtre
+            
+            // Trie par date (plus récent en premier)
+            ventesFiltrees.sort((a, b) => new Date(b.dateVente) - new Date(a.dateVente));
+            
+            let html = '';
+            let total = 0;
+            
+            if(ventesFiltrees.length === 0) {
+                html = '<tr><td colspan="6" class="aucune-vente">Aucune vente trouvée</td></tr>';
+            } else {
+                ventesFiltrees.forEach(vente => {
+                    const date = new Date(vente.dateVente);
+                    const dateStr = date.toLocaleDateString('fr-FR');
+                    
+                    html += `
+                        <tr>
+                            <td>${dateStr}</td>
+                            <td><code>${vente.code}</code></td>
+                            <td>${vente.forfait === '24h' ? '24h' : 
+                                 vente.forfait === '1semaine' ? '1 semaine' : '1 mois'}</td>
+                            <td>${vente.prix} FCFA</td>
+                            <td>${vente.monnaieRendue} FCFA</td>
+                            <td>${vente.heure}</td>
+                        </tr>
+                    `;
+                    
+                    total += vente.prix;
+                });
+            }
+            
+            document.getElementById('tableau-ventes').innerHTML = html;
+            document.getElementById('total-ventes').textContent = total + ' FCFA';
+        }
+        
+        function filtrerVentes(periode) {
+            // Met à jour les boutons actifs
+            document.querySelectorAll('.btn-filtre').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Affiche les ventes filtrées
+            afficherHistoriqueVentes(periode);
+        }
+        
+        // ========== CONFIGURATION ==========
+        function sauvegarderDonnees() {
+            const sauvegarde = {
+                codesDisponibles: codesDisponibles,
+                codesVendus: codesVendus,
+                parametres: parametres,
+                dateSauvegarde: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(sauvegarde, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sauvegarde-wifi-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Met à jour la date de dernière sauvegarde
+            parametres.derniereSauvegarde = new Date().toLocaleString();
+            localStorage.setItem('parametres', JSON.stringify(parametres));
+            document.getElementById('derniere-sauvegarde').textContent = new Date().toLocaleString();
+            
+            alert('Données sauvegardées avec succès !');
+        }
+        
+        // ========== FONCTIONS D'AIDE ==========
+        function rafraichirPage() {
+            mettreAJourStocks();
+            calculerRevenus();
+            afficherHistoriqueVentes('aujourdhui');
+            afficherCodesStock();
+            
+            // Met à jour l'heure
+            const maintenant = new Date();
+            document.getElementById('heure-actuelle').textContent = 
+                maintenant.toLocaleTimeString('fr-FR');
+        }
+        
+        function deconnexion() {
+            if(confirm('Déconnexion ?')) {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // ========== INITIALISATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialise les prix dans les champs
+            document.getElementById('prix-24h').value = parametres.prix['24h'];
+            document.getElementById('prix-1semaine').value = parametres.prix['1semaine'];
+            document.getElementById('prix-1mois').value = parametres.prix['1mois'];
+            
+            // Initialise les cases à cocher
+            document.getElementById('inclure-nom').checked = parametres.ticket.nom;
+            document.getElementById('inclure-date').checked = parametres.ticket.date;
+            document.getElementById('inclure-instructions').checked = parametres.ticket.instructions;
+            document.getElementById('inclure-support').checked = parametres.ticket.support;
+            
+            // Met à jour l'affichage
+            rafraichirPage();
+            
+            // Initialise la dernière sauvegarde
+            if(parametres.derniereSauvegarde) {
+                document.getElementById('derniere-sauvegarde').textContent = 
+                    new Date(parametres.derniereSauvegarde).toLocaleString();
+            }
+            
+            // Initialise la vente rapide
+            changerForfaitVente();
+            
+            // Met à jour l'heure en temps réel
+            setInterval(() => {
+                const maintenant = new Date();
+                document.getElementById('heure-actuelle').textContent = 
+                    maintenant.toLocaleTimeString('fr-FR');
+            }, 1000);
+        });
+    </script>
+</body>
+                                                                   </html>
